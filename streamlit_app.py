@@ -92,8 +92,11 @@ if nom:
     # Annuaire de professionnelles
     st.write("📞 Annuaire de professionnelles du bien-être")
     with st.expander("Voir l'annuaire"):
-        st.markdown("**📍 Marie Dupont – Sage-femme libérale**
-Toulouse – 06 00 00 00 00")
+        st.markdown("""**📍 Marie Dupont – Sage-femme libérale**  
+Adresse : 10 rue des Lilas, 75020 Paris  
+Tél : 01 23 45 67 89  
+Spécialité : Suivi post-partum, allaitement
+""")
         st.markdown("**📍 Sophie Leclerc – Sophrologue spécialisée maternité**
 Lyon – 07 11 11 11 11")
         st.markdown("**📍 Awa Ndiaye – Coach bien-être postnatal**
