@@ -1,6 +1,6 @@
 
 import streamlit as st
-from datetime import datetime
+import datetime
 
 st.set_page_config(page_title="Zarali – Bien-être Post-Partum", page_icon="🌸", layout="centered")
 
@@ -20,12 +20,6 @@ st.markdown("""
         padding: 10px 20px;
         font-weight: bold;
     }
-    .affirmation-box {
-        background-color: #ffe6f0;
-        border-left: 6px solid #ff66a3;
-        padding: 10px;
-        margin: 10px 0;
-    }
     </style>
 """, unsafe_allow_html=True)
 
@@ -33,11 +27,12 @@ st.markdown("""
 st.title("🌸 Bienvenue sur Zarali")
 st.subheader("Ton alliée bienveillante pendant le post-partum")
 
+# --- USER INPUT ---
 nom = st.text_input("Quel est ton prénom ?", "")
 
 if nom:
     st.success(f"Enchantée {nom} 💖 Ravie d’être avec toi aujourd’hui.")
-    humeur = st.radio("Comment te sens-tu en ce moment ?", ["Triste", "Fatiguée", "Stressée", "Bien", "Autre"])
+    humeur = st.radio("Comment te sens-tu ?", ["Triste", "Fatiguée", "Stressée", "Bien", "Autre"])
 
     if humeur == "Triste":
         st.info("Je suis là pour toi. Tu veux peut-être une respiration guidée ou un mot doux ? 🌧️")
@@ -50,36 +45,54 @@ if nom:
     else:
         st.info("Merci de partager. Chaque émotion compte. Je suis là pour t’écouter. 💬")
 
-    if st.button("💾 Sauvegarder mon humeur"):
-        with open("humeurs_log.txt", "a") as f:
-            f.write(f"{datetime.now().strftime('%Y-%m-%d %H:%M:%S')} - {nom} : {humeur}\n")
-        st.success("Ton ressenti a bien été sauvegardé 🌸")
-
     st.write("---")
-    besoin = st.selectbox("Souhaites-tu parler d’un thème particulier ?", ["-", "Sommeil", "Corps", "Confiance", "Solitude", "Non, merci"])
+    besoin = st.selectbox("Souhaites-tu aborder un sujet particulier ?", ["-", "Sommeil", "Corps", "Confiance", "Solitude", "Non, merci"])
 
     if besoin == "Sommeil":
-        st.warning("Le sommeil est précieux. Une courte sieste, une tisane... as-tu pu t'accorder un moment calme aujourd'hui ?")
-        st.audio("https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3")
+        st.warning("Le sommeil est précieux. As-tu pu t'accorder un moment calme aujourd'hui ?")
     elif besoin == "Corps":
         st.warning("Ton corps est fort et mérite amour et douceur. 💗")
     elif besoin == "Confiance":
         st.warning("Tu es puissante. Voici une affirmation : _'Je fais de mon mieux, et c’est déjà énorme.'_")
     elif besoin == "Solitude":
         st.warning("Tu n’es pas seule. Je peux t’orienter vers des groupes de soutien si tu veux.")
-    elif besoin == "Non, merci":
-        st.write("Pas de souci. Je suis juste là, en cas de besoin. 🌺")
-
-    # Affirmations personnalisées
-    st.write("💬 Affirmation du jour")
-    st.markdown(f"<div class='affirmation-box'>Je suis assez. Chaque jour, je progresse à mon rythme. 🌸</div>", unsafe_allow_html=True)
-
-    # Ressources utiles
-    st.write("📚 Ressources utiles")
-    with st.expander("Découvrir les liens"):
-        st.markdown("- [Comprendre le baby blues – ameli.fr](https://www.ameli.fr/assure/sante/devenir-parent/accouchement-et-nouveau-ne/baby-blues-depression-post-partum-grossesse)")
-        st.markdown("- [Groupes de parole de jeunes mamans – lembrassecoeur.fr](https://lembrassecoeur.fr)")
-        st.markdown("- [Soutien psychologique – mamazoa.fr](https://mamazoa.fr)")
 
     st.write("---")
-    st.write("💜 Merci pour cet échange. N’oublie pas que tu fais un travail incroyable. Zarali est là, avec toi.")
+
+    # --- JOURNAL DE BORD ÉMOTIONNEL ---
+    st.header("📔 Mon journal de bord émotionnel")
+    with st.form("journal_form"):
+        entry = st.text_area("Exprime-toi librement ici :")
+        submitted = st.form_submit_button("Enregistrer")
+        if submitted and entry:
+            with open("journal_zarali.txt", "a", encoding="utf-8") as f:
+                f.write(f"{datetime.date.today()} - {nom}: {entry}\n")
+            st.success("Ton message a bien été enregistré. Merci de t'être confiée 💖")
+
+    # --- FORUM ANONYME ---
+    st.header("🗣️ Espace de partages anonymes")
+    with st.form("forum_form"):
+        anonymous_msg = st.text_area("Partage une pensée ou un témoignage (anonymement)")
+        forum_submit = st.form_submit_button("Partager")
+        if forum_submit and anonymous_msg:
+            with open("forum_zarali.txt", "a", encoding="utf-8") as f:
+                f.write(f"{datetime.date.today()}: {anonymous_msg}\n")
+            st.success("Ton message a été partagé anonymement. Merci 💜")
+
+    st.write("💬 Témoignages récents :")
+    try:
+        with open("forum_zarali.txt", "r", encoding="utf-8") as f:
+            messages = f.readlines()[-5:]  # derniers messages
+            for msg in messages:
+                st.info(msg.strip())
+    except FileNotFoundError:
+        st.warning("Aucun message encore partagé. Sois la première à t'exprimer.")
+
+    # --- ANNUAIRE ---
+    st.header("📍 Annuaire de professionnels")
+    st.markdown("""
+    - 👩‍⚕️ **Sage-femme** : Marie Dupont — [sagesfemmesparis.fr](https://sagesfemmesparis.fr)
+    - 🧠 **Psychologue périnatale** : Claire Martin — [psyparis.fr](https://psyparis.fr)
+    - 💆 **Massothérapeute post-natale** : Aïcha Diallo — [bienetrebebe.fr](https://bienetrebebe.fr)
+    - 🤱 **Consultante allaitement** : Sophie B. — [allaiterfacile.com](https://allaiterfacile.com)
+    """)
