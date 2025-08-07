@@ -1,5 +1,6 @@
 
 import streamlit as st
+from datetime import datetime
 
 st.set_page_config(page_title="Zarali – Bien-être Post-Partum", page_icon="🌸", layout="centered")
 
@@ -7,9 +8,9 @@ st.set_page_config(page_title="Zarali – Bien-être Post-Partum", page_icon="�
 st.markdown("""
     <style>
     .main {
-        background-color: #FFF5F7;
+        background-color: #FFF9F9;
         color: #333333;
-        font-family: 'Helvetica Neue', sans-serif;
+        font-family: 'Arial', sans-serif;
     }
     .stButton > button {
         background-color: #FADADD;
@@ -18,21 +19,12 @@ st.markdown("""
         border: none;
         padding: 10px 20px;
         font-weight: bold;
-        transition: 0.3s;
     }
-    .stButton > button:hover {
-        background-color: #F7A8B8;
-        color: white;
-    }
-    .stRadio > div {
-        background-color: #FFEFF2;
-        border-radius: 10px;
+    .affirmation-box {
+        background-color: #ffe6f0;
+        border-left: 6px solid #ff66a3;
         padding: 10px;
-    }
-    .stSelectbox > div {
-        background-color: #FFF0F5;
-        border-radius: 10px;
-        padding: 5px;
+        margin: 10px 0;
     }
     </style>
 """, unsafe_allow_html=True)
@@ -45,9 +37,7 @@ nom = st.text_input("Quel est ton prénom ?", "")
 
 if nom:
     st.success(f"Enchantée {nom} 💖 Ravie d’être avec toi aujourd’hui.")
-    st.markdown("#### Comment te sens-tu en ce moment ?")
-
-    humeur = st.radio("Choisis ce qui te parle :", ["Triste", "Fatiguée", "Stressée", "Bien", "Autre"])
+    humeur = st.radio("Comment te sens-tu en ce moment ?", ["Triste", "Fatiguée", "Stressée", "Bien", "Autre"])
 
     if humeur == "Triste":
         st.info("Je suis là pour toi. Tu veux peut-être une respiration guidée ou un mot doux ? 🌧️")
@@ -60,20 +50,36 @@ if nom:
     else:
         st.info("Merci de partager. Chaque émotion compte. Je suis là pour t’écouter. 💬")
 
-    st.markdown("---")
-    st.markdown("#### Souhaites-tu qu’on parle de quelque chose en particulier ?")
-    besoin = st.selectbox("Choisis un thème :", ["-", "Sommeil", "Corps", "Confiance", "Solitude", "Non, merci"])
+    if st.button("💾 Sauvegarder mon humeur"):
+        with open("humeurs_log.txt", "a") as f:
+            f.write(f"{datetime.now().strftime('%Y-%m-%d %H:%M:%S')} - {nom} : {humeur}\n")
+        st.success("Ton ressenti a bien été sauvegardé 🌸")
+
+    st.write("---")
+    besoin = st.selectbox("Souhaites-tu parler d’un thème particulier ?", ["-", "Sommeil", "Corps", "Confiance", "Solitude", "Non, merci"])
 
     if besoin == "Sommeil":
-        st.warning("🛌 Le sommeil est précieux. Une courte sieste, une tisane... as-tu pu t'accorder un moment calme aujourd'hui ?")
+        st.warning("Le sommeil est précieux. Une courte sieste, une tisane... as-tu pu t'accorder un moment calme aujourd'hui ?")
+        st.audio("https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3")
     elif besoin == "Corps":
-        st.warning("💗 Ton corps est fort et mérite amour et douceur. Il a accompli une merveille.")
+        st.warning("Ton corps est fort et mérite amour et douceur. 💗")
     elif besoin == "Confiance":
-        st.warning("💬 Tu es puissante. Voici une affirmation : _'Je fais de mon mieux, et c’est déjà énorme.'_")
+        st.warning("Tu es puissante. Voici une affirmation : _'Je fais de mon mieux, et c’est déjà énorme.'_")
     elif besoin == "Solitude":
-        st.warning("🤝 Tu n’es pas seule. Je peux t’orienter vers des groupes de soutien si tu veux.")
+        st.warning("Tu n’es pas seule. Je peux t’orienter vers des groupes de soutien si tu veux.")
     elif besoin == "Non, merci":
         st.write("Pas de souci. Je suis juste là, en cas de besoin. 🌺")
 
-    st.markdown("---")
-    st.markdown("💜 **Merci pour cet échange. N’oublie pas que tu fais un travail incroyable. Zarali est là, avec toi.**")
+    # Affirmations personnalisées
+    st.write("💬 Affirmation du jour")
+    st.markdown(f"<div class='affirmation-box'>Je suis assez. Chaque jour, je progresse à mon rythme. 🌸</div>", unsafe_allow_html=True)
+
+    # Ressources utiles
+    st.write("📚 Ressources utiles")
+    with st.expander("Découvrir les liens"):
+        st.markdown("- [Comprendre le baby blues – ameli.fr](https://www.ameli.fr/assure/sante/devenir-parent/accouchement-et-nouveau-ne/baby-blues-depression-post-partum-grossesse)")
+        st.markdown("- [Groupes de parole de jeunes mamans – lembrassecoeur.fr](https://lembrassecoeur.fr)")
+        st.markdown("- [Soutien psychologique – mamazoa.fr](https://mamazoa.fr)")
+
+    st.write("---")
+    st.write("💜 Merci pour cet échange. N’oublie pas que tu fais un travail incroyable. Zarali est là, avec toi.")
