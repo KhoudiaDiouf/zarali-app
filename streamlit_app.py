@@ -97,10 +97,10 @@ Adresse : 10 rue des Lilas, 75020 Paris
 Tél : 01 23 45 67 89  
 Spécialité : Suivi post-partum, allaitement
 """)
-        st.markdown("**📍 Sophie Leclerc – Sophrologue spécialisée maternité**
-Lyon – 07 11 11 11 11")
-        st.markdown("**📍 Awa Ndiaye – Coach bien-être postnatal**
-Dakar – +221 77 123 45 67")
+        st.markdown("""**📍 Sophie Leclerc – Sophrologue spécialisée maternité**
+Lyon – 07 11 11 11 11""")
+        st.markdown("""**📍 Awa Ndiaye – Coach bien-être postnatal**
+Dakar – +221 77 123 45 67""")
 
     # Forum anonyme (témoignages)
     st.write("💬 Forum anonyme – Partage & Lecture")
